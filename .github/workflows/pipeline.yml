@@ -14,7 +14,7 @@ jobs:
   register-dataset:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Dependencies
         run: |
           pip install huggingface_hub datasets pandas
@@ -22,7 +22,7 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_USERNAME: ${{ secrets.HF_USERNAME }}
-        run: python scripts/register_dataset.py
+        run: python tourism_project/ scripts/register_dataset.py
 
   # ---------------------------------------------------------------
   # JOB 2: Data preparation — clean, split, upload train/test to HF
@@ -31,7 +31,7 @@ jobs:
     needs: register-dataset
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Dependencies
         run: |
           pip install huggingface_hub datasets pandas scikit-learn
@@ -39,7 +39,7 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_USERNAME: ${{ secrets.HF_USERNAME }}
-        run: python scripts/data_preparation.py
+        run: python tourism_project/ scripts/data_preparation.py
 
   # ---------------------------------------------------------------
   # JOB 3: Train models, track with MLflow, register best on HF
@@ -48,7 +48,7 @@ jobs:
     needs: data-prep
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Dependencies
         run: |
           pip install huggingface_hub datasets pandas scikit-learn xgboost mlflow
@@ -61,12 +61,12 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_USERNAME: ${{ secrets.HF_USERNAME }}
           MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
-        run: python scripts/train_model.py
+        run: python tourism_project/ scripts/train_model.py
       - name: Model Evaluation
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_USERNAME: ${{ secrets.HF_USERNAME }}
-        run: python scripts/evaluate_model.py
+        run: python tourism_project/ scripts/evaluate_model.py
 
   # ---------------------------------------------------------------
   # JOB 4: Deploy Streamlit app to Hugging Face Space
@@ -75,7 +75,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [model-training, data-prep, register-dataset]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Dependencies
         run: |
           pip install huggingface_hub
@@ -83,7 +83,7 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_USERNAME: ${{ secrets.HF_USERNAME }}
-        run: python scripts/deploy.py
+        run: python tourism_project/ scripts/deploy.py
 
   # ---------------------------------------------------------------
   # Auto-push any code updates back to the main branch

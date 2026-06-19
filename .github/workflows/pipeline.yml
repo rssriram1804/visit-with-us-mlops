@@ -61,6 +61,7 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_USERNAME: ${{ secrets.HF_USERNAME }}
           MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
+          MLFLOW_ALLOW_FILE_STORE: 'true'
         run: python tourism_project/scripts/train_model.py
       - name: Model Evaluation
         env:

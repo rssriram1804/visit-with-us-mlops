@@ -43,10 +43,7 @@ for name, (model, params) in MODELS.items():
         f1 = f1_score(y_te, gs.best_estimator_.predict(X_te))
         mlflow.log_params(gs.best_params_)
         mlflow.log_metric('f1_score', f1)
-         mlflow.sklearn.log_model(
-       gs.best_estimator_, 'model',
-       skops_trusted_types=['xgboost.core.Booster', 'xgboost.sklearn.XGBClassifier']
-   )
+        mlflow.sklearn.log_model(gs.best_estimator_, 'model', skops_trusted_types=['xgboost.core.Booster', 'xgboost.sklearn.XGBClassifier'])
         print(f'{name} — F1: {f1:.4f}')
         if f1 > best_score:
             best_score, best_model_obj = f1, gs.best_estimator_
